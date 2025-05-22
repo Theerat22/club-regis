@@ -42,7 +42,6 @@ export default function App() {
 
     const interval = setInterval(fetchData, 3000);
     return () => clearInterval(interval);
-
   }, [API_KEY]);
 
   // Function to determine status and color
@@ -55,7 +54,7 @@ export default function App() {
         textColor: "text-red-700",
         rowColor: "bg-red-50",
       };
-    } else if (remaining <= 5) {
+    } else if (remaining <= 2) {
       return {
         text: "เหลือน้อย",
         bgColor: "bg-amber-100",
@@ -64,7 +63,7 @@ export default function App() {
       };
     } else {
       return {
-        text: "รับสมัคร",
+        text: "เปิดรับสมัคร",
         bgColor: "bg-green-100",
         textColor: "text-green-700",
         rowColor: "",
@@ -106,34 +105,34 @@ export default function App() {
               total,
               registered
             );
-            
+
             const isFull = text === "เต็มแล้ว";
             const cardBgColor = isFull ? "bg-red-50" : "bg-white";
 
             return (
-              <div 
-                key={index} 
-                className={`${cardBgColor} rounded-lg shadow-md p-4 border ${isFull ? "border-red-200" : "border-gray-100"}`}
+              <div
+                key={index}
+                className={`${cardBgColor} rounded-lg shadow-md p-4 border ${
+                  isFull ? "border-red-200" : "border-gray-100"
+                }`}
               >
-                <h3 className={`text-lg font-semibold ${isFull ? "text-red-800" : "text-blue-800"} mb-2`}>
+                <h3
+                  className={`text-lg font-semibold ${
+                    isFull ? "text-red-800" : "text-blue-800"
+                  } mb-2`}
+                >
                   {club.Club_name}
                 </h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="bg-blue-50 p-2 rounded">
-                    <p className="text-gray-500">จำนวนที่รับ</p>
-                    <p className="font-medium text-gray-800">{club["จำนวนที่รับ"]}</p>
-                  </div>
-                  <div className="bg-blue-50 p-2 rounded">
-                    <p className="text-gray-500">สมัครแล้ว</p>
-                    <p className="font-medium text-gray-800">{club.Club_regis}</p>
-                  </div>
-                  <div className="bg-blue-50 p-2 rounded">
-                    <p className="text-gray-500">เหลือ</p>
-                    <p className="font-medium text-gray-800">{club.Club_remain}</p>
+                    <p className="text-gray-500 text-md">เหลือ</p>
+                    <p className="font-medium text-lg text-gray-800">
+                      {club.Club_remain}
+                    </p>
                   </div>
                   <div className="bg-blue-50 p-2 rounded flex items-center justify-center">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${bgColor} ${textColor} inline-block`}
+                      className={`px-3 py-1 rounded-full text-lg font-medium ${bgColor} ${textColor} inline-block`}
                     >
                       {text}
                     </span>
@@ -147,79 +146,135 @@ export default function App() {
         {/* Table layout for tablets and larger screens */}
         <div className="hidden sm:block bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-blue-600 text-white">
-                  <th className="py-3 px-4 md:py-4 md:px-6 text-left">ชื่อชุมนุม</th>
-                  <th className="py-3 px-2 md:py-4 md:px-6 text-center">จำนวนที่รับ</th>
-                  <th className="py-3 px-2 md:py-4 md:px-6 text-center">สมัครแล้ว</th>
-                  <th className="py-3 px-2 md:py-4 md:px-6 text-center">เหลือ</th>
-                  <th className="py-3 px-2 md:py-4 md:px-6 text-center">สถานะ</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {clubs.map((club, index) => {
-                  const total = parseInt(club["จำนวนที่รับ"] || 0);
-                  const registered = parseInt(club.Club_regis || 0);
-                  const { text, bgColor, textColor } = getStatusInfo(
-                    total,
-                    registered
-                  );
-                  
-                  const isFull = text === "เต็มแล้ว";
-                  const customRowBg = isFull 
-                    ? "bg-red-50" 
-                    : index % 2 === 0 ? "bg-blue-50" : "bg-white";
-
-                  return (
-                    <tr
-                      key={index}
-                      className={`${customRowBg} ${isFull ? "text-red-800" : ""}`}
-                    >
-                      <td className={`py-3 px-4 md:py-4 md:px-6 font-medium ${isFull ? "text-red-800" : "text-blue-900"}`}>
-                        {club.Club_name}
-                      </td>
-                      <td className="py-3 px-2 md:py-4 md:px-6 text-center text-gray-700">
-                        {club["จำนวนที่รับ"]}
-                      </td>
-                      <td className="py-3 px-2 md:py-4 md:px-6 text-center text-gray-700">
-                        {club.Club_regis}
-                      </td>
-                      <td className="py-3 px-2 md:py-4 md:px-6 text-center font-medium text-gray-700">
-                        {club.Club_remain}
-                      </td>
-                      <td className="py-3 px-2 md:py-4 md:px-6 text-center">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${bgColor} ${textColor}`}
-                        >
-                          {text}
-                        </span>
-                      </td>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+              {/* Left Column */}
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-blue-600 text-white">
+                      <th className="py-3 px-2 md:py-4 md:px-6 text-left">
+                        ชื่อชุมนุม
+                      </th>
+                      <th className="py-3 px-2 md:py-4 md:px-6 text-center">
+                        เหลือ
+                      </th>
+                      <th className="py-3 px-2 md:py-4 md:px-6 text-center">
+                        สถานะ
+                      </th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {clubs
+                      .slice(0, Math.ceil(clubs.length / 2))
+                      .map((club, index) => {
+                        const total = parseInt(club["จำนวนที่รับ"] || 0);
+                        const registered = parseInt(club.Club_regis || 0);
+                        const { text, bgColor, textColor } = getStatusInfo(
+                          total,
+                          registered
+                        );
+                        const isFull = text === "เต็มแล้ว";
+                        const customRowBg = isFull
+                          ? "bg-red-50"
+                          : index % 2 === 0
+                          ? "bg-blue-50"
+                          : "bg-white";
 
-        <div className="mt-6 sm:mt-8 text-center">
-          <div className="inline-flex items-center p-2 px-4 bg-yellow-100 rounded-lg text-yellow-700 text-xs sm:text-sm">
-            <svg
-              className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <span>
-              ข้อมูลอัพเดทล่าสุด: {new Date().toLocaleDateString("th-TH")}
-            </span>
+                        return (
+                          <tr
+                            key={index}
+                            className={`${customRowBg} ${
+                              isFull ? "text-red-800" : ""
+                            }`}
+                          >
+                            <td
+                              className={`py-3 px-4 md:py-4 md:px-6 font-medium ${
+                                isFull ? "text-red-800" : "text-blue-900"
+                              }`}
+                            >
+                              {club.Club_name}
+                            </td>
+                            <td className="py-3 px-2 md:py-4 md:px-6 text-center text-lg font-medium text-gray-700">
+                              {club.Club_remain}
+                            </td>
+                            <td className="py-3 px-2 md:py-4 md:px-6 text-center">
+                              <span
+                                className={`px-3 py-1 rounded-full text-md font-medium ${bgColor} ${textColor}`}
+                              >
+                                {text}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Right Column */}
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-blue-600 text-white">
+                      <th className="py-3 px-2 md:py-4 md:px-6 text-left">
+                        ชื่อชุมนุม
+                      </th>
+                      <th className="py-3 px-2 md:py-4 md:px-6 text-center">
+                        เหลือ
+                      </th>
+                      <th className="py-3 px-2 md:py-4 md:px-6 text-center">
+                        สถานะ
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {clubs
+                      .slice(Math.ceil(clubs.length / 2))
+                      .map((club, index) => {
+                        const total = parseInt(club["จำนวนที่รับ"] || 0);
+                        const registered = parseInt(club.Club_regis || 0);
+                        const { text, bgColor, textColor } = getStatusInfo(
+                          total,
+                          registered
+                        );
+                        const isFull = text === "เต็มแล้ว";
+                        const customRowBg = isFull
+                          ? "bg-red-50"
+                          : index % 2 === 0
+                          ? "bg-blue-50"
+                          : "bg-white";
+
+                        return (
+                          <tr
+                            key={index + Math.ceil(clubs.length / 2)}
+                            className={`${customRowBg} ${
+                              isFull ? "text-red-800" : ""
+                            }`}
+                          >
+                            <td
+                              className={`py-3 px-4 md:py-4 md:px-6 font-medium ${
+                                isFull ? "text-red-800" : "text-blue-900"
+                              }`}
+                            >
+                              {club.Club_name}
+                            </td>
+                            <td className="py-3 px-2 md:py-4 md:px-6 text-center text-lg font-medium text-gray-700">
+                              {club.Club_remain}
+                            </td>
+                            <td className="py-3 px-2 md:py-4 md:px-6 text-center">
+                              <span
+                                className={`px-3 py-1 rounded-full text-md font-medium ${bgColor} ${textColor}`}
+                              >
+                                {text}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
